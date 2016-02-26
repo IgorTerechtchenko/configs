@@ -1,1 +1,149 @@
-/etc/vim/vimrc
+runtime! debian.vim
+
+set nocompatible
+filetype off
+filetype plugin on
+
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin()
+Plugin 'gmarik/Vundle.vim'
+"------------------------------------------------------------------------
+" " plugin on GitHub repo
+" Plugin 'tpope/vim-fugitive'
+" " plugin from http://vim-scripts.org/vim/scripts.html
+" Plugin 'L9'
+" " Git plugin not hosted on GitHub
+" Plugin 'git://git.wincent.com/command-t.git'
+" " git repos on your local machine (i.e. when working on your own plugin)
+" Plugin 'file:///home/gmarik/path/to/plugin'
+" " The sparkup vim script is in a subdirectory of this repo called vim.
+" " Pass the path to set the runtimepath properly.
+" Plugin 'rstacruz/sparkup', {'rtp': 'vim/'}
+" " Avoid a name conflict with L9
+" Plugin 'user/L9', {'name': 'newL9'}
+"-------------------------------------------------------------------------
+Plugin 'nielsmadan/harlequin'
+Plugin 'tpope/vim-dispatch'
+Plugin 'ngmy/vim-rubocop'
+Plugin 'bling/vim-airline'
+    let g:airline#extensions#tabline#enabled = 1
+    let g:airline_powerline_fonts = 1
+    set title
+    set laststatus=2
+    set fillchars+=stl:\ ,stlnc:\
+    set timeoutlen=50
+    let g:bufferline_echo = 0
+
+Plugin 'scrooloose/nerdcommenter'
+Plugin 'majutsushi/tagbar' "Exuberant Ctags
+    nmap <F8> :TagbarToggle<CR>
+    let g:nerdtree_tabs_open_on_console_startup=1
+
+Plugin 'Valloric/YouCompleteMe'
+Plugin 'airblade/vim-gitgutter'
+Plugin 'mtglsk/mushroom'
+Plugin 'scrooloose/nerdtree'
+    nnoremap <C-A> :NERDTree<Enter>
+    nnoremap <C-D> :NERDTreeClose<Enter>
+    let g:airline_enable_nerdtree=1
+
+"colorscehemes
+Plugin 'sjl/badwolf'
+call vundle#end()
+filetype plugin indent on
+" To ignore plugin indent changes, instead use:
+" "filetype plugin on
+" "
+" " Brief help
+" " :PluginList       - lists configured plugins
+" " :PluginInstall    - installs plugins; append `!` to update or just
+" :PluginUpdate
+" " :PluginSearch foo - searches for foo; append `!` to refresh local cache
+" " :PluginClean      - confirms removal of unused plugins; append `!` to
+" auto-approve removal
+" "
+" " see :h vundle for more details or wiki for FAQ
+" " Put your non-Plugin stuff after this line
+
+if has("syntax")
+  syntax on
+endif
+
+syntax enable
+set background=dark
+
+if has("autocmd")
+  au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif "jump to the last position when reopening the file
+endif
+
+if has("autocmd")
+  filetype plugin indent on "load indentation rules and plugins according to the detected filetype.
+endif
+
+color mushroom
+set t_Co=256
+
+set showcmd		    " Show (partial) command in status line.
+set showmatch		" Show matching brackets.
+set ignorecase		" Do case insensitive matching
+set smartcase		" Do smart case matching
+set incsearch		" Incremental search
+set showmatch
+set hlsearch
+set history=100
+set number
+set ruler
+set smartindent
+set tabstop=4
+set shiftwidth=4
+set softtabstop=4
+set expandtab
+set autowrite		" Automatically save before commands like :next and :make
+
+if filereadable("/etc/vim/vimrc.local")
+    source /etc/vim/vimrc.local
+endif
+
+autocmd CursorMovedI * if pumvisible() == 0|pclose|endif
+autocmd InsertLeave * if pumvisible() == 0|pclose|endif
+
+"REMAPS
+nnoremap <C-k> :tabnext <Enter>
+nnoremap <Tab> :tabnext <Enter>
+nnoremap <C-j> :tabprev <Enter>
+nnoremap <C-t> :tabnew <Enter>
+nnoremap <C-w> :tabclose <Enter>
+
+nnoremap <F4> :wa<Enter>
+nnoremap <F5> :wqa<Enter>
+
+nnoremap <C-o> :edit 
+
+inoremap <F1> <ESC>
+nnoremap <F1> <ESC>
+vnoremap <F1> <ESC>
+
+map <up> <nop>
+map <down> <nop>
+map <left> <nop>
+map <right> <nop> 
+
+nmap <silent> <A-Up> :wincmd k<CR>
+nmap <silent> <A-Down> :wincmd j<CR>
+nmap <silent> <A-Left> :wincmd h<CR>
+nmap <silent> <A-Right> :wincmd l<CR>
+
+vmap <C-c> <leader>c<space>
+
+"-------------FIGHTING TRAILING WHITESPACES-----------------------
+:command DeleteTSpaces :%s/\s\+$// 
+autocmd FileType ruby,cs,asm,cpp autocmd FileWritePre   * :DeleteTSpaces
+autocmd FileType ruby,cs,asm,cpp autocmd FileAppendPre  * :DeleteTSpaces 
+autocmd FileType ruby,cs,asm,cpp autocmd FilterWritePre * :DeleteTSpaces
+autocmd FileType ruby,cs,asm,cpp autocmd BufWritePre    * :DeleteTSpaces
+"-----------------------------------------------------------------
+
+"--------DIFFERENT INDENTATION RULES FOR DIFFERENT FILETYPES-------
+autocmd FileType ruby set softtabstop=2|set shiftwidth=2|set expandtab "Sets tab = 2 spaces in ruby files
+autocmd FileType erb set softtabstop=2|set shiftwidth=2|set expandtab "Sets tab = 2 spaces in ruby files
+autocmd FileType asm set softtabstop=2|set shiftwidth=2|set expandtab "Sets tab = 2 spaces in asm files
