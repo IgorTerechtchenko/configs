@@ -1,11 +1,13 @@
 runtime! debian.vim
 
-set nocompatible
-filetype off
+set nocompatible filetype=off
 filetype plugin on
+
+set encoding=utf-8
 
 set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
+
 Plugin 'gmarik/Vundle.vim'
 "------------------------------------------------------------------------
 " " plugin on GitHub repo
@@ -22,9 +24,13 @@ Plugin 'gmarik/Vundle.vim'
 " " Avoid a name conflict with L9
 " Plugin 'user/L9', {'name': 'newL9'}
 "-------------------------------------------------------------------------
-Plugin 'nielsmadan/harlequin'
+Plugin 'moopet/pastebin.vim'
+Plugin 'mhinz/vim-startify'
+Plugin 'tpope/vim-fugitive'
+Plugin 'kien/ctrlp.vim' "search with ctrl-p
 Plugin 'tpope/vim-dispatch'
-Plugin 'ngmy/vim-rubocop'
+"Plugin 'scrooloose/syntastic'
+    "let g:syntastic_python_flake8_args="--ignore=E501,E225"
 Plugin 'bling/vim-airline'
     let g:airline#extensions#tabline#enabled = 1
     let g:airline_powerline_fonts = 1
@@ -47,8 +53,6 @@ Plugin 'scrooloose/nerdtree'
     nnoremap <C-D> :NERDTreeClose<Enter>
     let g:airline_enable_nerdtree=1
 
-"colorscehemes
-Plugin 'sjl/badwolf'
 call vundle#end()
 filetype plugin indent on
 " To ignore plugin indent changes, instead use:
@@ -100,47 +104,77 @@ set softtabstop=4
 set expandtab
 set autowrite		" Automatically save before commands like :next and :make
 
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*
+
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list = 1
+let g:syntastic_check_on_open = 1
+let g:syntastic_check_on_wq = 0
+
 if filereadable("/etc/vim/vimrc.local")
     source /etc/vim/vimrc.local
 endif
 
+"set foldmethod=indent
+"set foldlevel=99
+
+"removing hint window after autocompletion is used
 autocmd CursorMovedI * if pumvisible() == 0|pclose|endif
 autocmd InsertLeave * if pumvisible() == 0|pclose|endif
 
 "REMAPS
 nnoremap <C-k> :tabnext <Enter>
-nnoremap <Tab> :tabnext <Enter>
 nnoremap <C-j> :tabprev <Enter>
 nnoremap <C-t> :tabnew <Enter>
 nnoremap <C-w> :tabclose <Enter>
+
+nnoremap <Tab> :wincmd w <Enter>
 
 nnoremap <F4> :wa<Enter>
 nnoremap <F5> :wqa<Enter>
 
 nnoremap <C-o> :edit 
 
+" Enable folding with the spacebar
+nnoremap <space> za
+
 inoremap <F1> <ESC>
 nnoremap <F1> <ESC>
 vnoremap <F1> <ESC>
 
+"wow so vim
 map <up> <nop>
 map <down> <nop>
 map <left> <nop>
-map <right> <nop> 
+map <right> <nop>
 
+let g:ctrlp_map = '<c-f>'
+"let g:ctrlp_cmd = 'CtrlP'map <right> <nop> 
+
+"work with system clipboard
+"needs +clipboard version of vim to work
+"these are maps for X11
+"using athena-vim
+vmap <C-y> "+y
+nmap <C-p> "+p
+
+"arrow keys not messing stuff up in normal mode
 nmap <silent> <A-Up> :wincmd k<CR>
 nmap <silent> <A-Down> :wincmd j<CR>
 nmap <silent> <A-Left> :wincmd h<CR>
 nmap <silent> <A-Right> :wincmd l<CR>
 
-vmap <C-c> <leader>c<space>
+"comment
+vmap <C-c> <leader>c<space> 
 
 "-------------FIGHTING TRAILING WHITESPACES-----------------------
-:command DeleteTSpaces :%s/\s\+$// 
-autocmd FileType ruby,cs,asm,cpp autocmd FileWritePre   * :DeleteTSpaces
-autocmd FileType ruby,cs,asm,cpp autocmd FileAppendPre  * :DeleteTSpaces 
-autocmd FileType ruby,cs,asm,cpp autocmd FilterWritePre * :DeleteTSpaces
-autocmd FileType ruby,cs,asm,cpp autocmd BufWritePre    * :DeleteTSpaces
+:command DeleteTSpaces :%s/\s\+$//e 
+autocmd FileType ruby,cs,asm,cpp,python autocmd FileWritePre   * :DeleteTSpaces
+autocmd FileType ruby,cs,asm,cpp,python autocmd FileAppendPre  * :DeleteTSpaces 
+autocmd FileType ruby,cs,asm,cpp,python autocmd FilterWritePre * :DeleteTSpaces
+autocmd FileType ruby,cs,asm,cpp,python autocmd BufWritePre    * :DeleteTSpaces
 "-----------------------------------------------------------------
 
 "--------DIFFERENT INDENTATION RULES FOR DIFFERENT FILETYPES-------
