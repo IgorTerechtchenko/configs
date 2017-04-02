@@ -24,13 +24,15 @@ Plugin 'gmarik/Vundle.vim'
 " " Avoid a name conflict with L9
 " Plugin 'user/L9', {'name': 'newL9'}
 "-------------------------------------------------------------------------
-Plugin 'moopet/pastebin.vim'
+Plugin 'Valloric/YouCompleteMe'
+Plugin 'vim-ruby/vim-ruby'
+"Plugin 'moopet/pastebin.vim'
 Plugin 'mhinz/vim-startify'
 Plugin 'tpope/vim-fugitive'
 Plugin 'kien/ctrlp.vim' "search with ctrl-p
 Plugin 'tpope/vim-dispatch'
-"Plugin 'scrooloose/syntastic'
-    "let g:syntastic_python_flake8_args="--ignore=E501,E225"
+Plugin 'scrooloose/syntastic'
+    let g:syntastic_python_flake8_args="--ignore=E501,E225"
 Plugin 'bling/vim-airline'
     let g:airline#extensions#tabline#enabled = 1
     let g:airline_powerline_fonts = 1
@@ -45,7 +47,7 @@ Plugin 'majutsushi/tagbar' "Exuberant Ctags
     nmap <F8> :TagbarToggle<CR>
     let g:nerdtree_tabs_open_on_console_startup=1
 
-Plugin 'Valloric/YouCompleteMe'
+"Plugin 'Valloric/YouCompleteMe'
 Plugin 'airblade/vim-gitgutter'
 Plugin 'mtglsk/mushroom'
 Plugin 'scrooloose/nerdtree'
